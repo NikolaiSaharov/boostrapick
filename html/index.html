@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <style>
+        .car-card {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">Car Manager</h1>
+        <form id="carForm">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="brand" class="form-label">Brand:</label>
+                    <input type="text" class="form-control" id="brand" name="brand" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="model" class="form-label">Model:</label>
+                    <input type="text" class="form-control" id="model" name="model" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="year" class="form-label">Year:</label>
+                    <input type="number" class="form-control" id="year" name="year" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="photo" class="form-label">Photo URL:</label>
+                    <input type="text" class="form-control" id="photo" name="photo">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <input type="number" class="form-control" id="price" name="price" required>
+                </div>
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary">Add Car</button>
+                </div>
+            </div>
+        </form>
+        <div id="carList" class="row">
+            <!-- Карточки автомобилей будут добавляться сюда -->
+        </div>
+    </div>
+
+    <script>
+        function Car(brand, model, year, photo, price) {
+            this.brand = brand;
+            this.model = model;
+            this.year = year;
+            this.photo = photo;
+            this.price = price;
+        }
+
+        let cars = [];
+
+        function addCar(brand, model, year, photo, price) {
+            if (brand && model && year && price) {
+                let car = new Car(brand, model, year, photo, price);
+                cars.push(car);
+                displayCars();
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        function displayCars() {
+            let carList = document.getElementById('carList');
+            carList.innerHTML = '';
+            for (let i = 0; i < cars.length; i++) {
+                let car = cars[i];
+                let carDiv = document.createElement('div');
+                carDiv.className = 'col-md-4 mb-4';
+                carDiv.innerHTML = `
+                    <div class="card h-100 car-card">
+                        <img src="${car.photo}" class="card-img-top" alt="${car.brand} ${car.model}">
+                        <div class="card-body">
+                            <h5 class="card-title">${car.brand} ${car.model}</h5>
+                            <p class="card-text">Year: ${car.year}</p>
+                            <p class="card-text">Price: $${car.price}</p>
+                            <button class="btn btn-primary me-2" onclick="editCar(${i})">Edit</button>
+                            <button class="btn btn-danger" onclick="removeCar(${i})">Remove</button>
+                        </div>
+                    </div>
+                `;
+                carList.appendChild(carDiv);
+            }
+        }
+
+        function editCar(index) {
+            let car = cars[index];
+            document.getElementById('brand').value = car.brand;
+            document.getElementById('model').value = car.model;
+            document.getElementById('year').value = car.year;
+            document.getElementById('photo').value = car.photo;
+            document.getElementById('price').value = car.price;
+            removeCar(index);
+        }
+
+        function removeCar(index) {
+            cars.splice(index, 1);
+            displayCars();
+        }
+
+        document.getElementById('carForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let brand = document.getElementById('brand').value;
+            let model = document.getElementById('model').value;
+            let year = document.getElementById('year').value;
+            let photo = document.getElementById('photo').value;
+            let price = document.getElementById('price').value;
+            addCar(brand, model, year, photo, price);
+            this.reset();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>
